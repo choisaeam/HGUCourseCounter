@@ -3,12 +3,13 @@ package edu.handong.analysis;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import edu.handong.analysis.datamodel.Course;
 import edu.handong.analysis.datamodel.Student;
-import edu.handong.analysise.utils.NotEnoughArgumentException;
-import edu.handong.analysise.utils.Utils;
+import edu.handong.analysis.utils.NotEnoughArgumentException;
+import edu.handong.analysis.utils.Utils;
 
 public class HGUCoursePatternAnalyzer {
 
@@ -55,8 +56,17 @@ public class HGUCoursePatternAnalyzer {
 	private HashMap<String,Student> loadStudentCourseRecords(ArrayList<String> lines) {
 		
 		// TODO: Implement this method
-		
-		return null; // do not forget to return a proper variable.
+		HashMap<String,Student> map = new HashMap<String,Student>();
+		for(String line:lines) {
+			System.out.println(line);
+			String key = line.split("//s")[0];
+			Student stu = new Student(key);
+			Course course = new Course(line);	
+			System.out.println(course.getCourseName());
+			stu.addCourse(course);
+			map.put(key,stu);
+		}
+		return map; // do not forget to return a proper variable.
 	}
 
 	/**
@@ -75,7 +85,13 @@ public class HGUCoursePatternAnalyzer {
 	private ArrayList<String> countNumberOfCoursesTakenInEachSemester(Map<String, Student> sortedStudents) {
 		
 		// TODO: Implement this method
-		
-		return null; // do not forget to return a proper variable.
+		ArrayList<String> list = new ArrayList<String>();
+		Set<Map.Entry<String, Student>> entries = sortedStudents.entrySet();
+		for(Map.Entry<String, Student> tempEntry: entries){
+            int totalNumberOfSemestersRegistered = tempEntry.getValue().getSemestersByYearAndSemester().size();
+            for(int i = 0;i < totalNumberOfSemestersRegistered;i ++)
+            	list.add(tempEntry.getKey() + "," + totalNumberOfSemestersRegistered + "," + i + "," +tempEntry.getValue().getNumCourseInNthSementer(i));
+        }
+		return list; // do not forget to return a proper variable.
 	}
 }
