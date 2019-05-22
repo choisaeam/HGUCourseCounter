@@ -36,7 +36,6 @@ public class HGUCoursePatternAnalyzer {
 		ArrayList<String> lines = Utils.getLines(dataPath, true);
 		
 		students = loadStudentCourseRecords(lines);
-		
 		// To sort HashMap entries by key values so that we can save the results by student ids in ascending order.
 		Map<String, Student> sortedStudents = new TreeMap<String,Student>(students); 
 		
@@ -57,14 +56,21 @@ public class HGUCoursePatternAnalyzer {
 		
 		// TODO: Implement this method
 		HashMap<String,Student> map = new HashMap<String,Student>();
+		String pkey = lines.get(0).split(",")[0];
+		Student stu;
+		Student pstu = new Student(lines.get(0).split(",")[0]);
 		for(String line:lines) {
-			System.out.println(line);
-			String key = line.split("//s")[0];
-			Student stu = new Student(key);
-			Course course = new Course(line);	
-			System.out.println(course.getCourseName());
-			stu.addCourse(course);
-			map.put(key,stu);
+			String key = line.split(",")[0];
+			Course course = new Course(line);
+			if(pkey.equals(key)) {
+				pstu.addCourse(course);
+			}else {
+				map.put(pkey,pstu);
+				stu = new Student(key);	
+				stu.addCourse(course);
+				pstu = stu;
+				pkey = key;
+			}
 		}
 		return map; // do not forget to return a proper variable.
 	}
@@ -89,7 +95,8 @@ public class HGUCoursePatternAnalyzer {
 		Set<Map.Entry<String, Student>> entries = sortedStudents.entrySet();
 		for(Map.Entry<String, Student> tempEntry: entries){
             int totalNumberOfSemestersRegistered = tempEntry.getValue().getSemestersByYearAndSemester().size();
-            for(int i = 0;i < totalNumberOfSemestersRegistered;i ++)
+            
+            for(int i = 1;i <= totalNumberOfSemestersRegistered;i ++)
             	list.add(tempEntry.getKey() + "," + totalNumberOfSemestersRegistered + "," + i + "," +tempEntry.getValue().getNumCourseInNthSementer(i));
         }
 		return list; // do not forget to return a proper variable.
