@@ -72,5 +72,9 @@ public class Student {
 	public void setCoursesTaken(ArrayList<Course> coursesTaken) {
 		this.coursesTaken = coursesTaken;
 	}
+	
+	public HashMap<String,Integer> GetSemestersByYearAndSemester(){
+		return semestersByYearAndSemester;
+	}
 
 }
