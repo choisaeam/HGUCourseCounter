@@ -10,24 +10,19 @@ public class Utils {
 	public static ArrayList<String> getLines(String file,boolean removeHeader,int start,int end){
 		ArrayList<String> list = new ArrayList<String>();
 		try {
-			Reader in = new FileReader("file");
-			Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader("StudentID","YearMonthGraduated","FistMajor","SecondMajor","CourseCode","CourseName","CourseCredit","YearTaken","SemesterTaken").parse(in);
-			for (CSVRecord record : records) {
-	
-			    String studentId = record.get("StudentID");
-			    String yearMonthGraduated = record.get("YearMonthGraduated");
-			    String firstMajor = record.get("FistMajor");
-			    String secondMajor = record.get("SecondMajor");
-			    String courseCode = record.get("CourseCode");
-			    String courseName = record.get("CourseName");
-			    String courseCredit = record.get("CourseCredit");
-			    int yearTaken =Integer.parseInt(record.get("YearTaken"));
-			    int semesterCourseTaken = Integer.parseInt(record.get("SemesterTaken"));
-			    if(start > yearTaken || end < yearTaken)
-					continue;
-			    list.add(studentId + "," + yearMonthGraduated + "," + firstMajor + "," + secondMajor + "," + courseCode + "," + courseName + "," + courseCredit + "," + yearTaken + "," + semesterCourseTaken );
+			File f = new File(file);
+			FileReader fr = new FileReader(f);
+			BufferedReader br = new BufferedReader(fr);
+			String data = "";
+			if(removeHeader) {
+				data = br.readLine();
 			}
-			
+			while((data = br.readLine()) != null) {
+				if(start > Integer.parseInt(data.split(",")[7].trim()) || end < Integer.parseInt(data.split(",")[7].trim()))
+					continue;
+				list.add(data);
+			}
+			br.close();
 		}catch(IOException e) {
 			System.out.println("The file path does not exist. Please check your CLI argument!");
 			System.exit(0);
